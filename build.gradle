@@ -28,10 +28,10 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
-    implementation 'io.grpc:grpc-netty:1.36.0' // Use versions compatible with older plugin
-    implementation 'io.grpc:grpc-protobuf:1.36.0'
-    implementation 'io.grpc:grpc-stub:1.36.0'
-    implementation 'com.google.protobuf:protobuf-java:3.15.8' // Use an older version compatible with Gradle 5.1
+  implementation 'io.grpc:grpc-netty:1.43.0'
+    implementation 'io.grpc:grpc-protobuf:1.43.0'
+    implementation 'io.grpc:grpc-stub:1.43.0'
+   implementation 'com.google.protobuf:protobuf-java:3.18.0'
 
 }
 
@@ -44,7 +44,7 @@ protobuf {
     }
     plugins {
         grpc {
-           artifact = 'io.grpc:protoc-gen-grpc-java:1.36.0'
+           artifact = 'io.grpc:protoc-gen-grpc-java:1.43.0'
         }
     }
     generateProtoTasks {

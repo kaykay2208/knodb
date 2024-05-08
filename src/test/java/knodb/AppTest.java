@@ -6,6 +6,8 @@ package knodb;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import com.grpc.knodb.App;
+
 public class AppTest {
     @Test public void testAppHasAGreeting() {
         App classUnderTest = new App();

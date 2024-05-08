@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package knodb;
+package com.grpc.knodb;
 
 service KnodbOpsService {
     rpc Get(GetRequest) returns (GetResponse);
-    rpc Put(PutRequest) returns (google.protobuf.Empty);
+    rpc Put(PutRequest) returns (GetResponse) ;
 }
 
 message GetRequest {
