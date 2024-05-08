@@ -1,4 +1,5 @@
 package com.grpc.knodb;
+import com.data.DataEngine;
 import com.grpc.knodb.KnodbOpsServiceOuterClass.GetRequest;
 import com.grpc.knodb.KnodbOpsServiceOuterClass.GetResponse;
 import com.grpc.knodb.KnodbOpsServiceOuterClass.PutRequest;
@@ -9,7 +10,7 @@ public class KnodbOpsServiceImpl extends KnodbOpsServiceGrpc.KnodbOpsServiceImpl
 	@Override
 	public void get(GetRequest request, StreamObserver<GetResponse> responseObserver) {
 
-
+		DataEngine.getData(request.getKey());
 		GetResponse response = GetResponse.newBuilder()
 			.putData("example_key", "example_value")
 			.build();
@@ -23,6 +24,7 @@ public class KnodbOpsServiceImpl extends KnodbOpsServiceGrpc.KnodbOpsServiceImpl
 
 		System.out.println("Received PUT request:");
 		System.out.println("Key: " + request.getKey());
+		DataEngine.addData( request.getKey(),request.getDataMap());
 		System.out.println("Data: " + request.getDataMap());
 		GetResponse response = GetResponse.newBuilder()
 			.putData("example_key", "example_value")
