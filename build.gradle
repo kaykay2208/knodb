@@ -35,8 +35,8 @@ dependencies {
 
 }
 
-// Define the main class for the application
-mainClassName = 'knodb.App'
+apply plugin: 'application'
+mainClassName = 'com.grpc.knodb.App'
 
 protobuf {
     protoc {
