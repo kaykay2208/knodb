@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package knodb;
+
+service KnodbOpsService {
+    rpc Get(GetRequest) returns (GetResponse);
+    rpc Put(PutRequest) returns (google.protobuf.Empty);
+}
+
+message GetRequest {
+    string key = 1;
+}
+
+message GetResponse {
+    map<string, string> data = 1;
+}
+
+message PutRequest {
+    string key = 1;
+    map<string, string> data = 2;
+}
