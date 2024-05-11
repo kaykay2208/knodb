@@ -67,5 +67,12 @@ protobuf {
         classifier = null
         version = null
     }
+    task createZip(type: Zip) {
+        from 'src/main/bin'
+        from shadowJar
+        archiveFileName = 'knodb.zip'
+        destinationDir = file("$buildDir/distributions")
+    }
+
 
 }
