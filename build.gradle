@@ -13,7 +13,9 @@ plugins {
     // Apply the application plugin to add support for building an application
     id 'application'
     id 'com.google.protobuf' version '0.8.8'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
+
 
 repositories {
     // Use jcenter for resolving your dependencies.
@@ -33,6 +35,8 @@ dependencies {
     implementation 'io.grpc:grpc-stub:1.43.0'
    implementation 'com.google.protobuf:protobuf-java:3.18.0'
     implementation 'org.apache.kafka:kafka-clients:3.0.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.17.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
 
 }
 
@@ -53,4 +57,15 @@ protobuf {
             grpc {}
         }
     }
+    jar {
+        manifest {
+            attributes 'Main-Class': mainClassName
+        }
+    }
+    shadowJar {
+        baseName = 'knodb'
+        classifier = null
+        version = null
+    }
+
 }

@@ -5,14 +5,18 @@ import com.grpc.knodb.KnodbOpsServiceOuterClass.GetResponse;
 import com.grpc.knodb.KnodbOpsServiceOuterClass.PutRequest;
 import com.grpc.knodb.KnodbOpsServiceGrpc;
 import io.grpc.stub.StreamObserver;
+
+import java.util.Map;
+
 public class KnodbOpsServiceImpl extends KnodbOpsServiceGrpc.KnodbOpsServiceImplBase
 {
 	@Override
 	public void get(GetRequest request, StreamObserver<GetResponse> responseObserver) {
 
-		DataEngine.getData(request.getKey());
+		String data =DataEngine.getData(request.getKey());
+		System.out.println("data :"+ data.toString());
 		GetResponse response = GetResponse.newBuilder()
-			.putData("example_key", "example_value")
+			.putData("sample",data)
 			.build();
 
 		responseObserver.onNext(response);

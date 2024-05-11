@@ -2,7 +2,9 @@ package com.data;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,9 +15,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class DataWorker
 {
-	private static String filename = "keyMap";
+	private static String filename = "keyMap.json";
 
 	public static void initializeWorker ()
 	{
@@ -49,11 +54,27 @@ public class DataWorker
 
 	private static void syncDatatoDisk ()
 	{
-		try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename)))
+
+		try
 		{
-			oos.writeObject(DataEngine.KEY_VS_OFFSET);
+			File file =new File(filename);
+			System.out.println("going to fsync");
+			if(DataEngine.KEY_VS_OFFSET.isEmpty()){
+				System.out.println("Map is empty");
+				ObjectMapper mapper = new ObjectMapper();
+				Map <String, Map <String, Object>> userData = mapper.readValue(
+					file , new TypeReference <Map <String, Map <String, Object>>>()
+					{
+					});
+				DataEngine.KEY_VS_OFFSET = userData;
+				System.out.println("map after sync "+ DataEngine.KEY_VS_OFFSET.toString());
+			}
+			else{
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.writeValue( file, DataEngine.KEY_VS_OFFSET);}
+
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -62,12 +83,25 @@ public class DataWorker
 	static Map loadFromDisk ()
 	{
 		Map data = new HashMap <>();
-		try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename)))
+
+		try
 		{
-			data = (Map) ois.readObject();
+			File file = new File(filename);
+			if(file.exists())
+			{
+				System.out.println("file present");
+				ObjectMapper mapper = new ObjectMapper();
+				Map <String, Map <String, Object>> userData = mapper.readValue(
+					file , new TypeReference <Map <String, Map <String, Object>>>()
+					{
+					});
+				DataEngine.KEY_VS_OFFSET = userData;
+			}else{
+				System.out.println("file not present");
+			}
 
 		}
-		catch (IOException | ClassNotFoundException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
