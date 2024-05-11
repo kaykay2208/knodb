@@ -1,5 +1,10 @@
 #!/bin/bash
 
+cleanup() {
+    echo "Cleaning up..."
+    kill $(jobs -p)
+}
+trap cleanup SIGINT SIGTERM
 
 check_port() {
     # Check if lsof command is available
@@ -25,11 +30,16 @@ else
     echo "Port 2181 is not available. Exiting."
     exit 1
 fi
+if [ -d "logs" ];then
+  echo "logs directory exist"
+else
+  mkdir "logs"
+fi
 
 kafka_setup(){
   if [ -d "kafka" ]; then
       echo "Kafka directory already exists."
-      cf kafka
+      cd kafka/kafka_*
   else
 wget https://archive.apache.org/dist/kafka/0.10.0.0/kafka_2.11-0.10.0.0.tgz
 
@@ -65,5 +75,8 @@ else
     echo "Topic 'knodb' created successfully."
 fi
 }
-kafka_setup
-java -jar knodb.jar
+kafka_setup > logs/kafka.txt 2>&1
+cd ../..
+echo "server started"
+java -jar knodb.jar > logs/startup.txt 2>&1
+echo "server killed"

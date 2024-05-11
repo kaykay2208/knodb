@@ -40,15 +40,7 @@ public class DataWorker
 			}
 		};
 		System.out.println("going to initiate sync thread");
-		final ScheduledFuture <?> beeperHandle =
-			scheduler.scheduleAtFixedRate(beeper , 10 , 10 , SECONDS);
-		scheduler.schedule(new Runnable()
-		{
-			public void run ()
-			{
-				beeperHandle.cancel(true);
-			}
-		} , 60 * 60 , SECONDS);
+		final ScheduledFuture <?> beeperHandle = scheduler.scheduleAtFixedRate(beeper , 10 , 10 , SECONDS);
 		System.out.println("initiated sync thread");
 	}
 
@@ -57,21 +49,30 @@ public class DataWorker
 
 		try
 		{
-			File file =new File(filename);
+			File file = new File(filename);
 			System.out.println("going to fsync");
-			if(DataEngine.KEY_VS_OFFSET.isEmpty()){
+			if(DataEngine.KEY_VS_OFFSET.isEmpty())
+			{
 				System.out.println("Map is empty");
-				ObjectMapper mapper = new ObjectMapper();
-				Map <String, Map <String, Object>> userData = mapper.readValue(
-					file , new TypeReference <Map <String, Map <String, Object>>>()
-					{
-					});
-				DataEngine.KEY_VS_OFFSET = userData;
-				System.out.println("map after sync "+ DataEngine.KEY_VS_OFFSET.toString());
+				if(file.exists())
+				{
+					ObjectMapper mapper = new ObjectMapper();
+					Map <String, Map <String, Object>> userData = mapper.readValue(
+						file , new TypeReference <Map <String, Map <String, Object>>>()
+						{
+						});
+					DataEngine.KEY_VS_OFFSET = userData;
+				}
+				else
+				{
+					System.out.println("file not present");
+				}
 			}
-			else{
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.writeValue( file, DataEngine.KEY_VS_OFFSET);}
+			else
+			{
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.writeValue(file , DataEngine.KEY_VS_OFFSET);
+			}
 
 		}
 		catch (Exception e)
@@ -96,7 +97,9 @@ public class DataWorker
 					{
 					});
 				DataEngine.KEY_VS_OFFSET = userData;
-			}else{
+			}
+			else
+			{
 				System.out.println("file not present");
 			}
 
